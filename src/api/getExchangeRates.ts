@@ -1,7 +1,7 @@
-import type { ExchangeRateLine, ExchangeRates } from "../types/types";
+import type { ExchangeRateLineApi, ExchangeRatesApi } from "../types/types";
 
 export const getExchangeRates = async () => {
-  let response: ExchangeRates;
+  let response: ExchangeRatesApi;
 
   try {
     const cnbResponse = await fetch("/api/cnb/daily-rates");
@@ -16,7 +16,7 @@ export const getExchangeRates = async () => {
   return response;
 };
 
-const parseExchangeRates = (exchangeRates: string) => {
+export const parseExchangeRates = (exchangeRates: string) => {
   const rateLines = exchangeRates.trim().split(`\n`);
 
   const dateString = rateLines.splice(0, 1);
@@ -32,7 +32,7 @@ const parseExchangeRates = (exchangeRates: string) => {
   };
 };
 
-const parseExchangeRateLine = (rateLine: string): ExchangeRateLine => {
+const parseExchangeRateLine = (rateLine: string): ExchangeRateLineApi => {
   const splitLine = rateLine.split("|");
 
   return {

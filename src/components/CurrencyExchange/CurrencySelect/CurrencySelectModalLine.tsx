@@ -4,24 +4,18 @@ import styled from "styled-components";
 import { OTHER_CURRENCY_PROP_NAME } from "../../../constants/constants";
 import type {
   ExchangeRateFormValueTypes,
-  ExchangeRateLine,
+  ExchangeRateLineApi,
 } from "../../../types/types";
 
-type CurrencySelectModalLineProps = {
-  exchangeRate: ExchangeRateLine;
-  isLast: boolean;
-  isSelected: boolean;
-};
-
-const Line = styled.button<{ isSelected?: boolean }>`
+const Line = styled.button<{ $isSelected?: boolean }>`
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 4px 8px;
+  padding: 4px 1rem;
   width: 100%;
-  background-color: ${({ isSelected }) =>
-    isSelected ? "#6e6e6e" : "transparent"};
+  background-color: ${({ $isSelected }) =>
+    $isSelected ? "#6e6e6e" : "transparent"};
   color: #f0f0f0;
   border: none;
   cursor: pointer;
@@ -53,6 +47,12 @@ const CountryAndName = styled.span`
   margin-top: 2px;
 `;
 
+type CurrencySelectModalLineProps = {
+  exchangeRate: ExchangeRateLineApi;
+  isLast: boolean;
+  isSelected: boolean;
+};
+
 export const CurrencySelectModalLine = forwardRef<
   HTMLButtonElement,
   CurrencySelectModalLineProps
@@ -66,7 +66,8 @@ export const CurrencySelectModalLine = forwardRef<
       onClick={() =>
         setValue(OTHER_CURRENCY_PROP_NAME, exchangeRate.currencyCode)
       }
-      isSelected={isSelected}
+      $isSelected={isSelected}
+      data-testid={`currency-select-modal-line-${exchangeRate.currencyCode}`}
     >
       <Code>{exchangeRate.currencyCode}</Code>
       <CountryAndName>

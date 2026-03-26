@@ -1,7 +1,7 @@
 import styled from "styled-components";
-import type { ExchangeRateLine } from "../../types/types";
-import { CurrencyExchangeRateLine } from "./CurrencyExchangeRateLine";
-import { exchangeRateLineDivider } from "./ExchangeRateLineDivider";
+import type { ExchangeRateLineApi } from "../../types/types";
+import { ExchangeRateLine } from "./ExchangeRateLine";
+import { exchangeRateLineDivider } from "./exchangeRateLineDivider";
 
 const ListWrapper = styled.div`
   display: flex;
@@ -39,31 +39,25 @@ const Columns = styled.div`
 `;
 
 type ExchangeRateListProps = {
-  exchangeRates: ExchangeRateLine[];
+  exchangeRates: ExchangeRateLineApi[];
 };
 
 export const ExchangeRateList = ({ exchangeRates }: ExchangeRateListProps) => {
-  const middleRate = Math.ceil(exchangeRates.length / 2);
-  const leftColumnRates = exchangeRates.slice(0, middleRate);
-  const rightColumnRates = exchangeRates.slice(middleRate);
+  const middleIndex = Math.ceil(exchangeRates.length / 2);
+  const leftColumnRates = exchangeRates.slice(0, middleIndex);
+  const rightColumnRates = exchangeRates.slice(middleIndex);
 
   return (
     <Columns>
       <ListWrapper>
         {leftColumnRates.map((it) => (
-          <CurrencyExchangeRateLine
-            key={it.currencyCode}
-            exchangeRateLine={it}
-          />
+          <ExchangeRateLine key={it.currencyCode} exchangeRateLine={it} />
         ))}
       </ListWrapper>
 
       <ListWrapper>
         {rightColumnRates.map((it) => (
-          <CurrencyExchangeRateLine
-            key={it.currencyCode}
-            exchangeRateLine={it}
-          />
+          <ExchangeRateLine key={it.currencyCode} exchangeRateLine={it} />
         ))}
       </ListWrapper>
     </Columns>

@@ -4,8 +4,11 @@ import type {
   OTHER_CURRENCY_PROP_NAME,
 } from "../constants/constants";
 
-export type ExchangeRates = { date: Date; exchangeRates: ExchangeRateLine[] };
-export type ExchangeRateLine = {
+export type ExchangeRatesApi = {
+  date: Date;
+  exchangeRates: ExchangeRateLineApi[];
+};
+export type ExchangeRateLineApi = {
   countryName: string;
   currencyCode: string;
   currencyName: string;

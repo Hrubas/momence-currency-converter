@@ -8,12 +8,12 @@ import {
 } from "../../constants/constants";
 import type {
   ExchangeRateFormValueTypes,
-  ExchangeRateLine,
+  ExchangeRateLineApi,
 } from "../../types/types";
 import { getDecimalSeparator } from "../../utils/locale";
 
 type CurrencyAmountInputProps = {
-  exchangeRates: ExchangeRateLine[];
+  exchangeRates: ExchangeRateLineApi[];
   propName: keyof ExchangeRateFormValueTypes;
 };
 
@@ -44,10 +44,12 @@ export const CurrencyAmountInput = ({
     <StyledNumericFormat
       decimalSeparator={getDecimalSeparator()}
       inputMode="decimal"
-      value={value || 0}
+      value={value ?? ""}
+      data-testid={propName}
+      placeholder="Enter the amount"
       onValueChange={(values, sourceInfo) => {
         if (sourceInfo.source === "event") {
-          const newValue = values.floatValue || 0;
+          const newValue = values.floatValue || null;
           setValue(propName, newValue);
 
           if (selectedExchangeRate) {
@@ -57,12 +59,16 @@ export const CurrencyAmountInput = ({
             if (propName === CZK_AMOUNT_PROP_NAME) {
               setValue(
                 OTHER_CURRENCY_AMOUNT_PROP_NAME,
-                Math.round((newValue / actualRate) * 100) / 100,
+                newValue === null
+                  ? null
+                  : Math.round(((newValue || 0) / actualRate) * 100) / 100,
               );
             } else {
               setValue(
                 CZK_AMOUNT_PROP_NAME,
-                Math.round(newValue * actualRate * 100) / 100,
+                newValue === null
+                  ? null
+                  : Math.round((newValue || 0) * actualRate * 100) / 100,
               );
             }
           }

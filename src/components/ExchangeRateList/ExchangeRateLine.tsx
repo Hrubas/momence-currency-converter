@@ -3,9 +3,10 @@ import styled from "styled-components";
 import { OTHER_CURRENCY_PROP_NAME } from "../../constants/constants";
 import type {
   ExchangeRateFormValueTypes,
-  ExchangeRateLine,
+  ExchangeRateLineApi,
 } from "../../types/types";
-import { exchangeRateLineDivider } from "./ExchangeRateLineDivider";
+import { getLocale } from "../../utils/locale";
+import { exchangeRateLineDivider } from "./exchangeRateLineDivider";
 
 const Line = styled.button`
   position: relative;
@@ -13,8 +14,8 @@ const Line = styled.button`
   flex-direction: column;
   justify-content: space-between;
   width: 100%;
-  padding: 10px 12px;
-  gap: 1rem;
+  padding: 10px 1rem;
+  gap: 12px;
 
   background-color: #393939;
   border: none;
@@ -57,12 +58,10 @@ const FirstPartWrapper = styled.div`
   }
 `;
 
-type CurrencyAmountInputProps = {
-  exchangeRateLine: ExchangeRateLine;
+type ExchangeRateLineProps = {
+  exchangeRateLine: ExchangeRateLineApi;
 };
-export function CurrencyExchangeRateLine({
-  exchangeRateLine,
-}: CurrencyAmountInputProps) {
+export function ExchangeRateLine({ exchangeRateLine }: ExchangeRateLineProps) {
   const { setValue } = useFormContext<ExchangeRateFormValueTypes>();
 
   const handleOnClick = () => {
@@ -70,7 +69,11 @@ export function CurrencyExchangeRateLine({
   };
 
   return (
-    <Line type="button" onClick={handleOnClick}>
+    <Line
+      type="button"
+      onClick={handleOnClick}
+      data-testid={`exchange-rate-line-${exchangeRateLine.currencyCode}`}
+    >
       <FirstPartWrapper>
         <CurrencyCode>{exchangeRateLine.currencyCode}</CurrencyCode>
         <span>
@@ -79,7 +82,7 @@ export function CurrencyExchangeRateLine({
       </FirstPartWrapper>
       <ExchangeRate>
         {exchangeRateLine.amount} {exchangeRateLine.currencyCode} ={" "}
-        {exchangeRateLine.rate} CZK
+        {exchangeRateLine.rate.toLocaleString(getLocale())} CZK
       </ExchangeRate>
     </Line>
   );

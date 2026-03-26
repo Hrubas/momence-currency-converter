@@ -3,12 +3,12 @@ import {
   CZK_AMOUNT_PROP_NAME,
   OTHER_CURRENCY_AMOUNT_PROP_NAME,
 } from "../../constants/constants";
-import type { ExchangeRateLine } from "../../types/types";
+import type { ExchangeRateLineApi } from "../../types/types";
 import { CurrencyAmountInput } from "./CurrencyAmountInput";
 import { CurrencySelect } from "./CurrencySelect/CurrencySelect";
 
 type CurrencyAmountInputProps = {
-  exchangeRates: ExchangeRateLine[];
+  exchangeRates: ExchangeRateLineApi[];
 };
 
 const ExchangeContainer = styled.div`

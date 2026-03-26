@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { OTHER_CURRENCY_PROP_NAME } from "../../../constants/constants";
 import type {
   ExchangeRateFormValueTypes,
-  ExchangeRateLine,
+  ExchangeRateLineApi,
 } from "../../../types/types";
 import { CurrencySelectModalLine } from "./CurrencySelectModalLine";
 
@@ -34,9 +34,13 @@ const Overlay = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  justify-content: center;
-  align-items: center;
   z-index: 999;
+
+  justify-content: right;
+  align-items: top;
+  @media (min-width: 1024px) {
+    justify-content: center;
+  }
 `;
 
 const ModalContainer = styled.div`
@@ -44,7 +48,7 @@ const ModalContainer = styled.div`
   flex-direction: column;
   background-color: #4f4f4f;
   border-radius: 8px;
-  max-width: 500px;
+  width: 200px;
   height: 80%;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
   overflow: hidden;
@@ -67,6 +71,14 @@ const ModalContainer = styled.div`
   }
   scrollbar-width: thin;
   scrollbar-color: #6a6a6a #3a3a3a;
+
+  margin: 1rem 1rem 0 0;
+  @media (min-width: 768px) {
+    margin: 1rem 3rem 0 0;
+  }
+  @media (min-width: 1024px) {
+    margin: 1rem 0 0 800px;
+  }
 `;
 
 const ModalBody = styled.div`
@@ -75,7 +87,7 @@ const ModalBody = styled.div`
 `;
 
 type CurrencySelectProps = {
-  exchangeRates: ExchangeRateLine[];
+  exchangeRates: ExchangeRateLineApi[];
 };
 
 export const CurrencySelect = ({ exchangeRates }: CurrencySelectProps) => {
@@ -98,8 +110,14 @@ export const CurrencySelect = ({ exchangeRates }: CurrencySelectProps) => {
 
   return (
     <>
-      <SelectButton type="button" onClick={() => setIsOpen(true)}>
-        <SelectedCurrency>{selectedCurrency}</SelectedCurrency>
+      <SelectButton
+        type="button"
+        onClick={() => setIsOpen(true)}
+        data-testid="currency-select-button"
+      >
+        <SelectedCurrency data-testid="selected-currency">
+          {selectedCurrency}
+        </SelectedCurrency>
         <IoIosArrowDown />
       </SelectButton>
 

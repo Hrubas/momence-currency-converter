@@ -8,7 +8,7 @@ import {
 } from "../constants/constants";
 import type {
   ExchangeRateFormValueTypes,
-  ExchangeRateLine,
+  ExchangeRateLineApi,
 } from "../types/types";
 
 const Form = styled.form`
@@ -29,7 +29,7 @@ const Form = styled.form`
 `;
 
 type ExchangeRateFormProps = PropsWithChildren & {
-  exchangeRates: ExchangeRateLine[];
+  exchangeRates: ExchangeRateLineApi[];
 };
 
 export const ExchangeRateForm = ({
@@ -39,8 +39,8 @@ export const ExchangeRateForm = ({
   const formMethods = useForm<ExchangeRateFormValueTypes>({
     defaultValues: {
       [OTHER_CURRENCY_PROP_NAME]: "EUR",
-      [CZK_AMOUNT_PROP_NAME]: 0,
-      [OTHER_CURRENCY_AMOUNT_PROP_NAME]: 0,
+      [CZK_AMOUNT_PROP_NAME]: null,
+      [OTHER_CURRENCY_AMOUNT_PROP_NAME]: null,
     },
   });
   const [czkAmount, selectedCurrency] = useWatch({
@@ -58,11 +58,14 @@ export const ExchangeRateForm = ({
 
     formMethods.setValue(
       OTHER_CURRENCY_AMOUNT_PROP_NAME,
-      Math.round(
-        (czkAmount || 0) *
-          (selectedExchangeRateLine.amount / selectedExchangeRateLine.rate) *
-          100,
-      ) / 100,
+      czkAmount === null
+        ? null
+        : Math.round(
+            (czkAmount || 0) *
+              (selectedExchangeRateLine.amount /
+                selectedExchangeRateLine.rate) *
+              100,
+          ) / 100,
     );
   }, [selectedCurrency]);
 

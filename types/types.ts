@@ -2,10 +2,13 @@ import type {
   CZK_AMOUNT_PROP_NAME,
   OTHER_CURRENCY_AMOUNT_PROP_NAME,
   OTHER_CURRENCY_PROP_NAME,
-} from "../constants/constants";
+} from "../src/constants/constants";
 
-export type ExchangeRates = { date: Date; exchangeRates: ExchangeRateLine[] };
-export type ExchangeRateLine = {
+export type ExchangeRatesApi = {
+  date: string;
+  exchangeRates: ExchangeRateLineApi[];
+};
+export type ExchangeRateLineApi = {
   countryName: string;
   currencyCode: string;
   currencyName: string;

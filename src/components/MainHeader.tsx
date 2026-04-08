@@ -25,6 +25,10 @@ const Subtitle = styled.span`
   line-height: 1.4;
 `;
 
+const NoWrap = styled(Subtitle)`
+  white-space: nowrap;
+`;
+
 type MainHeaderProps = {
   date: Date;
 };
@@ -35,7 +39,7 @@ export const MainHeader = ({ date }: MainHeaderProps) => {
       <Title>Currency converter</Title>
       <Subtitle>
         Working with exchange rates from cnb.cz issued on{" "}
-        {date.toLocaleDateString(getLocale())}
+        <NoWrap>{date.toLocaleDateString(getLocale())}</NoWrap>
       </Subtitle>
     </Wrapper>
   );

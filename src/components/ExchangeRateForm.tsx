@@ -1,15 +1,12 @@
-import { useEffect, type PropsWithChildren } from "react";
-import { FormProvider, useForm, useWatch } from "react-hook-form";
+import { type PropsWithChildren } from "react";
+import { FormProvider, useForm } from "react-hook-form";
 import styled from "styled-components";
+import type { ExchangeRateFormValueTypes } from "../../types/types";
 import {
   CZK_AMOUNT_PROP_NAME,
   OTHER_CURRENCY_AMOUNT_PROP_NAME,
   OTHER_CURRENCY_PROP_NAME,
 } from "../constants/constants";
-import type {
-  ExchangeRateFormValueTypes,
-  ExchangeRateLine,
-} from "../types/types";
 
 const Form = styled.form`
   display: flex;
@@ -28,43 +25,16 @@ const Form = styled.form`
   }
 `;
 
-type ExchangeRateFormProps = PropsWithChildren & {
-  exchangeRates: ExchangeRateLine[];
-};
+type ExchangeRateFormProps = PropsWithChildren;
 
-export const ExchangeRateForm = ({
-  children,
-  exchangeRates,
-}: ExchangeRateFormProps) => {
+export const ExchangeRateForm = ({ children }: ExchangeRateFormProps) => {
   const formMethods = useForm<ExchangeRateFormValueTypes>({
     defaultValues: {
       [OTHER_CURRENCY_PROP_NAME]: "EUR",
-      [CZK_AMOUNT_PROP_NAME]: 0,
-      [OTHER_CURRENCY_AMOUNT_PROP_NAME]: 0,
+      [CZK_AMOUNT_PROP_NAME]: null,
+      [OTHER_CURRENCY_AMOUNT_PROP_NAME]: null,
     },
   });
-  const [czkAmount, selectedCurrency] = useWatch({
-    control: formMethods.control,
-    name: [CZK_AMOUNT_PROP_NAME, OTHER_CURRENCY_PROP_NAME],
-  });
-
-  useEffect(() => {
-    const selectedExchangeRateLine = exchangeRates.find(
-      (it) => it.currencyCode === selectedCurrency,
-    );
-    if (!selectedExchangeRateLine) {
-      return;
-    }
-
-    formMethods.setValue(
-      OTHER_CURRENCY_AMOUNT_PROP_NAME,
-      Math.round(
-        (czkAmount || 0) *
-          (selectedExchangeRateLine.amount / selectedExchangeRateLine.rate) *
-          100,
-      ) / 100,
-    );
-  }, [selectedCurrency]);
 
   return (
     <FormProvider {...formMethods}>

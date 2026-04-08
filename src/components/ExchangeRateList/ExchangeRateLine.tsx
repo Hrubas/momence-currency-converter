@@ -1,11 +1,8 @@
-import { useFormContext } from "react-hook-form";
 import styled from "styled-components";
-import { OTHER_CURRENCY_PROP_NAME } from "../../constants/constants";
-import type {
-  ExchangeRateFormValueTypes,
-  ExchangeRateLine,
-} from "../../types/types";
-import { exchangeRateLineDivider } from "./ExchangeRateLineDivider";
+import type { ExchangeRateLineApi } from "../../../types/types";
+import { useExchangeRateFormContext } from "../../hooks/useExchangeRateFormContext.hook";
+import { getLocale } from "../../utils/locale";
+import { exchangeRateLineDivider } from "./exchangeRateLineDivider";
 
 const Line = styled.button`
   position: relative;
@@ -13,8 +10,8 @@ const Line = styled.button`
   flex-direction: column;
   justify-content: space-between;
   width: 100%;
-  padding: 10px 12px;
-  gap: 1rem;
+  padding: 10px 1rem;
+  gap: 12px;
 
   background-color: #393939;
   border: none;
@@ -57,20 +54,25 @@ const FirstPartWrapper = styled.div`
   }
 `;
 
-type CurrencyAmountInputProps = {
-  exchangeRateLine: ExchangeRateLine;
+type ExchangeRateLineProps = {
+  exchangeRateLine: ExchangeRateLineApi;
+  exchangeRates: ExchangeRateLineApi[];
 };
-export function CurrencyExchangeRateLine({
+export function ExchangeRateLine({
   exchangeRateLine,
-}: CurrencyAmountInputProps) {
-  const { setValue } = useFormContext<ExchangeRateFormValueTypes>();
-
-  const handleOnClick = () => {
-    setValue(OTHER_CURRENCY_PROP_NAME, exchangeRateLine.currencyCode);
+  exchangeRates,
+}: ExchangeRateLineProps) {
+  const { setOtherCurrency } = useExchangeRateFormContext({ exchangeRates });
+  const selectCurrency = () => {
+    setOtherCurrency(exchangeRateLine.currencyCode);
   };
 
   return (
-    <Line type="button" onClick={handleOnClick}>
+    <Line
+      type="button"
+      onClick={selectCurrency}
+      data-testid={`exchange-rate-line-${exchangeRateLine.currencyCode}`}
+    >
       <FirstPartWrapper>
         <CurrencyCode>{exchangeRateLine.currencyCode}</CurrencyCode>
         <span>
@@ -79,7 +81,7 @@ export function CurrencyExchangeRateLine({
       </FirstPartWrapper>
       <ExchangeRate>
         {exchangeRateLine.amount} {exchangeRateLine.currencyCode} ={" "}
-        {exchangeRateLine.rate} CZK
+        {exchangeRateLine.rate.toLocaleString(getLocale())} CZK
       </ExchangeRate>
     </Line>
   );

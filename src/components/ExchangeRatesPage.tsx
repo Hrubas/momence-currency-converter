@@ -1,6 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
 import styled from "styled-components";
-import { getExchangeRates } from "../api/getExchangeRates";
+import { useExchangeRateQuery } from "../hooks/useExchangeRateQuery.hook";
 import { CurrencyExchange } from "./CurrencyExchange/CurrencyExchange";
 import { ExchangeRateForm } from "./ExchangeRateForm";
 import { ExchangeRateList } from "./ExchangeRateList/ExchangeRateList";
@@ -31,19 +30,16 @@ const Columns = styled.div`
 `;
 
 export const ExchangeRatesPage = () => {
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["exchangeRates"],
-    queryFn: getExchangeRates,
-  });
+  const { data, isLoading, error } = useExchangeRateQuery();
 
   if (error) return <PageWrapper>Error loading exchange rates.</PageWrapper>;
   if (isLoading || !data) return <PageWrapper>Loading...</PageWrapper>;
 
   return (
     <PageWrapper>
-      <ExchangeRateForm exchangeRates={data.exchangeRates}>
+      <ExchangeRateForm>
         <Columns>
-          <MainHeader date={data.date} />
+          <MainHeader date={new Date(data.date)} />
           <CurrencyExchange exchangeRates={data.exchangeRates} />
         </Columns>
         <ExchangeRateList exchangeRates={data.exchangeRates} />

@@ -1,27 +1,17 @@
 import { forwardRef } from "react";
-import { useFormContext } from "react-hook-form";
 import styled from "styled-components";
-import { OTHER_CURRENCY_PROP_NAME } from "../../../constants/constants";
-import type {
-  ExchangeRateFormValueTypes,
-  ExchangeRateLine,
-} from "../../../types/types";
+import type { ExchangeRateLineApi } from "../../../../types/types";
+import { useExchangeRateFormContext } from "../../../hooks/useExchangeRateFormContext.hook";
 
-type CurrencySelectModalLineProps = {
-  exchangeRate: ExchangeRateLine;
-  isLast: boolean;
-  isSelected: boolean;
-};
-
-const Line = styled.button<{ isSelected?: boolean }>`
+const Line = styled.button<{ $isSelected?: boolean }>`
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 4px 8px;
+  padding: 4px 1rem;
   width: 100%;
-  background-color: ${({ isSelected }) =>
-    isSelected ? "#6e6e6e" : "transparent"};
+  background-color: ${({ $isSelected }) =>
+    $isSelected ? "#6e6e6e" : "transparent"};
   color: #f0f0f0;
   border: none;
   cursor: pointer;
@@ -53,26 +43,40 @@ const CountryAndName = styled.span`
   margin-top: 2px;
 `;
 
+type CurrencySelectModalLineProps = {
+  exchangeRates: ExchangeRateLineApi[];
+  exchangeRate: ExchangeRateLineApi;
+  isLast: boolean;
+  isSelected: boolean;
+};
+
 export const CurrencySelectModalLine = forwardRef<
   HTMLButtonElement,
   CurrencySelectModalLineProps
->(({ exchangeRate, isSelected, isLast }, selectedCurrencyRef) => {
-  const { setValue } = useFormContext<ExchangeRateFormValueTypes>();
+>(
+  (
+    { exchangeRate, isSelected, isLast, exchangeRates },
+    selectedCurrencyRef,
+  ) => {
+    const { setOtherCurrency } = useExchangeRateFormContext({ exchangeRates });
+    const selectCurrency = () => {
+      setOtherCurrency(exchangeRate.currencyCode);
+    };
 
-  return (
-    <Line
-      ref={selectedCurrencyRef}
-      type="button"
-      onClick={() =>
-        setValue(OTHER_CURRENCY_PROP_NAME, exchangeRate.currencyCode)
-      }
-      isSelected={isSelected}
-    >
-      <Code>{exchangeRate.currencyCode}</Code>
-      <CountryAndName>
-        {exchangeRate.countryName} - {exchangeRate.currencyName}
-      </CountryAndName>
-      {!isLast && <Divider />}
-    </Line>
-  );
-});
+    return (
+      <Line
+        ref={selectedCurrencyRef}
+        type="button"
+        onClick={selectCurrency}
+        $isSelected={isSelected}
+        data-testid={`currency-select-modal-line-${exchangeRate.currencyCode}`}
+      >
+        <Code>{exchangeRate.currencyCode}</Code>
+        <CountryAndName>
+          {exchangeRate.countryName} - {exchangeRate.currencyName}
+        </CountryAndName>
+        {!isLast && <Divider />}
+      </Line>
+    );
+  },
+);
